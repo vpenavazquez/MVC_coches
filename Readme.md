@@ -68,4 +68,4 @@ sequenceDiagram
     View->>-View: System.out.println()
     View-->>Controller: boolean
     deactivate View
-```
+```<img width="896" height="697" alt="imagen" src="https://github.com/user-attachments/assets/65366b36-6d06-493a-81fd-6dc9ca5ade5e" />
