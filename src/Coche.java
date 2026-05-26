@@ -1,34 +1,34 @@
 /**
- * Representa un vehículo terrestre de tipo Coche.
- * Permite gestionar la información básica del automóvil, como su modelo,
- * matrícula, velocidad actual y el kilometraje acumulado.
- * * @author Victor
- * @version 1.0
+ * Clase que representa un coche con sus datos básicos.
+ * @author Victor
  */
 public class Coche {
 
-    /** La matrícula identificativa del coche. */
+    /** Matrícula del coche. */
     public String matricula;
 
-    /** El modelo o nombre comercial del coche. */
+    /** Modelo o marca del coche. */
     public String modelo;
 
-    /** La velocidad actual del coche en km/h. */
+    /** Velocidad actual en km/h. */
     public Integer velocidad;
 
-    /** El kilometraje total recorrido por el coche. */
+    /** Kilómetros totales recorridos. */
     public int km;
 
+    /** Gasolina actual en litros. */
+    public int gasolina;
+
     /**
-     * Constructor para instanciar un nuevo Coche con sus datos iniciales.
-     * Al crearse, el coche inicia estacionado (velocidad 0) y sin recorrido (0 km).
-     * * @param modelo El modelo o marca del vehículo (ej. "Seat Ibiza").
-     * @param matricula La matrícula del vehículo (ej. "1234-BBB").
+     * Crea un coche nuevo sin kilómetros, sin velocidad y sin gasolina.
+     * @param modelo Nombre o marca del coche.
+     * @param matricula Matrícula única del coche.
      */
     public Coche(String modelo, String matricula) {
         this.modelo = modelo;
         this.matricula = matricula;
         this.velocidad = 0;
         this.km = 0;
+        this.gasolina = 0;
     }
 }

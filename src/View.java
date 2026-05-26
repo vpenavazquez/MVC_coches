@@ -2,19 +2,13 @@ import java.util.Scanner;
 import java.util.List;
 
 /**
- * Clase encargada de la interfaz de usuario del sistema (Vista).
- * Proporciona un menú textual por consola para interactuar con el usuario,
- * capturar sus entradas y mostrar los resultados devueltos por el controlador.
- * * @author Victor
- * @version 1.0
+ * Clase que gestiona la pantalla y lo que el usuario escribe en consola.
+ * @author Victor
  */
 public class View {
 
     /**
-     * Despliega el menú principal interactivo en la consola.
-     * Gestiona el bucle de la aplicación, lee las opciones elegidas por el usuario,
-     * valida posibles errores de entrada de datos y delega las operaciones
-     * de negocio en el controlador.
+     * Muestra el menú de opciones por consola y procesa la opción elegida.
      */
     public void menu() {
         Controller c = new Controller();
@@ -29,7 +23,8 @@ public class View {
             System.out.println("4. Añadir velocidad");
             System.out.println("5. Mostrar velocidad del coche");
             System.out.println("6. Coches en el parking");
-            System.out.println("7. Salir");
+            System.out.println("7. Meter Gasolina");
+            System.out.println("8. Salir");
             System.out.print("Seleccione una opción: ");
 
             try {
@@ -71,9 +66,9 @@ public class View {
                     String matricula3 = teclado.nextLine();
                     Coche avanza = c.atenderAvanzarCoche(matricula3);
                     if (avanza != null) {
-                        System.out.println("¡Avanzado! Kilómetros actuales de: " + avanza.km);
+                        System.out.println("¡Avanzado! Kilómetros actuales de: " + avanza.km + " | Gasolina restante: " + avanza.gasolina + " L");
                     } else {
-                        System.out.println("El coche con matrícula " + matricula3 + " no está en el parking.");
+                        System.out.println("Error: El coche con matrícula " + matricula3 + " no está en el parking o no tiene suficiente gasolina.");
                     }
                     break;
 
@@ -83,14 +78,14 @@ public class View {
                     String matricula4 = teclado.nextLine();
                     System.out.print("Introduce la nueva velocidad: ");
 
-                    Integer v = teclado.nextInt();
-                    teclado.nextLine(); // Limpia el buffer del escáner
-
-                    int velocidadNueva = c.atenderCambiarVelocidad(matricula4, v);
-                    if (velocidadNueva != -1) {
-                        System.out.println(" Velocidad actualizada con éxito a: " + velocidadNueva + " km/h.");
-                    } else {
-                        System.out.println(" Error: No se encontró ningún coche con la matrícula " + matricula4);
+                    try {
+                        Integer v = Integer.parseInt(teclado.nextLine());
+                        int velocidadNueva = c.atenderCambiarVelocidad(matricula4, v);
+                        System.out.println("Velocidad actualizada con éxito a: " + velocidadNueva + " km/h.");
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error: Introduce un número válido para la velocidad.");
+                    } catch (NullPointerException e) {
+                        System.out.println("Error: No se encontró ningún coche con la matrícula " + matricula4);
                     }
                     break;
 
@@ -98,8 +93,12 @@ public class View {
                     System.out.println("\n--- Mostrar velocidad del coche ---");
                     System.out.print("Introduce la matrícula del coche: ");
                     String matricula5 = teclado.nextLine();
-                    int velocidad = c.atenderMostrarVelocidad(matricula5);
-                    System.out.println("Velocidad actual del coche: " + velocidad + " km/h.");
+                    try {
+                        int velocidad = c.atenderMostrarVelocidad(matricula5);
+                        System.out.println("Velocidad actual del coche: " + velocidad + " km/h.");
+                    } catch (NullPointerException e) {
+                        System.out.println("Error: No se encontró ningún coche con la matrícula " + matricula5);
+                    }
                     break;
 
                 case 6:
@@ -109,22 +108,40 @@ public class View {
                         System.out.println("El parking está vacío.");
                     } else {
                         for (Coche ch : lista) {
-                            System.out.println("Modelo: " + ch.modelo + " | Matrícula: " + ch.matricula + " | Velocidad: " + ch.velocidad + " km/h" + " | Recorrido: " + ch.km + " km");
+                            System.out.println("Modelo: " + ch.modelo + " | Matrícula: " + ch.matricula + " | Velocidad: " + ch.velocidad + " km/h | Recorrido: " + ch.km + " km | Gasolina: " + ch.gasolina + " L");
                         }
                         System.out.println("----------------------------");
                     }
                     break;
 
                 case 7:
+                    System.out.println("\n--- Meter Gasolina ---");
+                    System.out.print("Introduce la matrícula: ");
+                    String matriculaGasolina = teclado.nextLine();
+                    System.out.print("Introduce los litros a repostar: ");
+                    try {
+                        int litros = Integer.parseInt(teclado.nextLine());
+                        Coche cocheGasolina = c.atenderRepostar(matriculaGasolina, litros);
+                        if (cocheGasolina != null) {
+                            System.out.println("¡Éxito! El coche ahora tiene " + cocheGasolina.gasolina + " litros de gasolina.");
+                        } else {
+                            System.out.println("Error: No se encontró ningún coche con la matrícula " + matriculaGasolina);
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error: Introduce una cantidad válida de litros.");
+                    }
+                    break;
+
+                case 8:
                     System.out.println("\nSaliendo del programa... ¡Hasta pronto!");
                     break;
 
                 default:
-                    System.out.println("Opción no válida. Por favor, elige un número del 1 al 7.");
+                    System.out.println("Opción no válida. Por favor, elige un número del 1 al 8.");
                     break;
             }
 
-        } while (opcion != 7);
+        } while (opcion != 8);
 
         teclado.close();
     }

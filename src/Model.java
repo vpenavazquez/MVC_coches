@@ -2,22 +2,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Clase encargada de manejar y gestionar los datos del sistema.
- * Actúa como el repositorio centralizado (simulando una base de datos en memoria)
- * para administrar los vehículos estacionados en el parking.
- * * @author Victor
- * @version 1.0
+ * Clase que guarda la lista de coches y gestiona sus datos.
+ * @author Victor
  */
 public class Model {
 
-    /** Lista estática que almacena todos los coches que se encuentran en el parking. */
+    /** Lista donde se guardan todos los coches del parking. */
     static ArrayList<Coche> parking = new ArrayList<>();
 
     /**
-     * Crea un nuevo coche y lo registra dentro de la lista del parking.
-     * * @param modelo El modelo o marca del coche a registrar.
-     * @param matricula El identificador único del coche (matrícula).
-     * @return El objeto {@link Coche} que ha sido creado y almacenado.
+     * Registra un coche nuevo en el parking.
+     * @param modelo Marca del coche.
+     * @param matricula Matrícula del coche.
+     * @return El coche que se acaba de crear.
      */
     public Coche crearCoche(String modelo, String matricula){
         Coche aux = new Coche(modelo, matricula);
@@ -26,10 +23,9 @@ public class Model {
     }
 
     /**
-     * Busca un coche específico dentro del parking utilizando su matrícula.
-     * * @param matricula La matrícula del coche que se desea buscar.
-     * @return El objeto {@link Coche} que coincide con la matrícula,
-     * o {@code null} si no se encuentra ningún resultado.
+     * Busca un coche en el parking por su matrícula.
+     * @param matricula Matrícula a buscar.
+     * @return El coche encontrado, o null si no existe.
      */
     public Coche getCoche(String matricula){
         Coche aux = null;
@@ -42,10 +38,9 @@ public class Model {
     }
 
     /**
-     * Elimina un coche del parking a partir de su matrícula si este existe.
-     * * @param matricula La matrícula del coche que se desea retirar.
-     * @return El objeto {@link Coche} que ha sido eliminado,
-     * o {@code null} si el coche no estaba registrado.
+     * Saca un coche del parking usando su matrícula.
+     * @param matricula Matrícula del coche a quitar.
+     * @return El coche eliminado, o null si no se encontró.
      */
     public Coche quitarCoche(String matricula) {
         Coche cocheEncontrado = getCoche(matricula);
@@ -57,11 +52,10 @@ public class Model {
     }
 
     /**
-     * Modifica la velocidad actual de un coche registrado.
-     * * @param matricula La matrícula del coche a modificar.
-     * @param v La nueva velocidad que se le asignará al vehículo.
-     * @return La nueva velocidad asignada tras realizar el cambio.
-     * @throws NullPointerException si no se encuentra ningún coche con la matrícula proporcionada.
+     * Cambia la velocidad de un coche.
+     * @param matricula Matrícula del coche.
+     * @param v Nueva velocidad.
+     * @return La velocidad que se ha guardado.
      */
     public int cambiarVelocidad(String matricula, Integer v) {
         getCoche(matricula).velocidad = v;
@@ -69,34 +63,48 @@ public class Model {
     }
 
     /**
-     * Incrementa en una unidad el kilometraje acumulado de un coche específico.
-     * * @param matricula La matrícula del coche que va a avanzar.
-     * @return El objeto {@link Coche} con su kilometraje actualizado,
-     * o {@code null} si el coche no existe.
+     * Hace que un coche sume 1 km si tiene gasolina (gasta 1 litro).
+     * @param matricula Matrícula del coche.
+     * @return El coche modificado, o null si no se pudo mover.
      */
     public Coche hacerAvanzarCoche(String matricula) {
         Coche aux = getCoche(matricula);
-        if (aux != null) {
+        if (aux != null && aux.gasolina > 0) {
             aux.km++;
+            aux.gasolina--;
+            return aux;
         }
-        return aux;
+        return null;
     }
 
     /**
-     * Obtiene la velocidad actual de un coche según su matrícula.
-     * * @param matricula La matrícula del coche a consultar.
-     * @return La velocidad actual del vehículo en km/h.
-     * @throws NullPointerException si el coche con la matrícula dada no existe en el registro.
+     * Devuelve la velocidad actual de un coche.
+     * @param matricula Matrícula del coche.
+     * @return Velocidad en km/h.
      */
     public int getVelocidad(String matricula) {
         return getCoche(matricula).velocidad;
     }
 
     /**
-     * Devuelve la lista completa de todos los coches que están actualmente en el parking.
-     * * @return Una interfaz {@link List} que contiene los objetos {@link Coche} registrados.
+     * Devuelve la lista con todos los coches apuntados.
+     * @return Lista de coches en el parking.
      */
     public List<Coche> getListaParking() {
         return parking;
+    }
+
+    /**
+     * Añade litros de gasolina al depósito de un coche.
+     * @param matricula Matrícula del coche.
+     * @param litros Litros de combustible a meter.
+     * @return El coche con la gasolina actualizada, o null si no existe.
+     */
+    public Coche repostarGasolina(String matricula, int litros) {
+        Coche aux = getCoche(matricula);
+        if (aux != null && litros > 0) {
+            aux.gasolina += litros;
+        }
+        return aux;
     }
 }
